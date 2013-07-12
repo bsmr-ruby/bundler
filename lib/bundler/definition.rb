@@ -8,7 +8,14 @@ module Bundler
     attr_reader :dependencies, :platforms, :sources, :ruby_version,
       :locked_deps
 
+    # Given a gemfile and lockfile creates a Bundler definition
+    #
+    # @param gemfile [Pathname] Path to Gemfile
+    # @param lockfile [Pathname,nil] Path to Gemfile.lock
+    # @param unlock [Hash, nil] Gems that have been requested to be updated
+    # @return [Bundler::Definition] 
     def self.build(gemfile, lockfile, unlock)
+      binding.pry()
       unlock ||= {}
       gemfile = Pathname.new(gemfile).expand_path
 
@@ -109,6 +116,8 @@ module Bundler
       specs
     end
 
+    # For given dependency list returns materialized Specset
+    # @return [Bundler::SpecSet]
     def specs
       @specs ||= begin
         specs = resolve.materialize(requested_dependencies)
@@ -160,6 +169,7 @@ module Bundler
     end
 
     def resolve
+      binding.pry()
       @resolve ||= begin
         if Bundler.settings[:frozen] || (!@unlocking && nothing_changed?)
           @locked_specs
